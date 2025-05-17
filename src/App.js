@@ -5,7 +5,7 @@ function App() {
     <div className="App">
       <h1>¡Universidad Católica de Pereira !</h1>
       <p>Listado de integrantes - Proceso de Desarrollo de Software I</p>
-      <p>José Nicolás Aristizabal Ramirez</p>
+      <p>José Nicolás Aristizabal Ramirez </p>
     </div>
   );
 }
