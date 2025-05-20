@@ -1,5 +1,10 @@
 .App {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
 
 .App-logo {
@@ -35,4 +40,14 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.screen_light {
+  background-color: aliceblue;
+  color: black;
+}
+
+.screen_dark {
+  background-color: black;
+  color: white;
 }
