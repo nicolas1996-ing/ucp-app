@@ -12,11 +12,6 @@ jobs:
       deployments: write
 
     steps:
-      - name: Debug token presence (temporal)
-        run: echo "Vercel token length: ${TOKEN_LENGTH}"
-        env:
-          TOKEN_LENGTH: ${{ secrets.VERCEL_TOKEN && secrets.VERCEL_TOKEN.length }}
-
       - name: Checkout code
         uses: actions/checkout@v4
 
