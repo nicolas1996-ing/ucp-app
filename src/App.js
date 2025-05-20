@@ -6,7 +6,7 @@ function App() {
   const mainDiv = useRef(null)
 
   useEffect(() => {
-    if (counter % 2 == 0) {
+    if (counter % 2 === 0) {
       mainDiv.current.classList.add("screen_light");
       mainDiv.current.classList.remove("screen_dark");
     } else {
