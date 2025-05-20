@@ -1,4 +1,4 @@
-name: Deploy to Vercel
+name: deploy to vercel
 
 on:
   push:
@@ -8,8 +8,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      deployments: write
+      contents: read # Necesario para hacer checkout del código (generalmente es el default)
+      deployments: write # Necesario para que la acción cree "GitHub Deployments"
 
     steps:
       - name: Checkout code
@@ -34,3 +34,6 @@ jobs:
 
       - name: Deploy Project to Vercel
         run: npx vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL PROJECT ID: ${{ secrets.VERCEL_PROJECT_ID }}
