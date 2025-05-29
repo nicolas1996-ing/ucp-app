@@ -36,11 +36,13 @@ pipeline {
       emailext (
         subject: "Pipeline ${currentBuild.result}: ucp-app-react #${env.BUILD_NUMBER}",
         body: """
-        Estado: ${currentBuild.result}
-        URL Build: ${env.BUILD_URL}
-        Detalles de Pruebas: ${env.BUILD_URL}testReport/
+        Estado: ${currentBuild.result}<br>
+        URL Build: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a><br>
+        Detalles de Pruebas: <a href="${env.BUILD_URL}testReport/">${env.BUILD_URL}testReport/</a>
         """,
-        to: 'josenicolasaristizabalramirez@gmail.com' // Reemplaza con tu email
+        mimeType: 'text/html',
+        to: 'josenicolasaristizabalramirez@gmail.com',
+        recipientProviders: [[$class: 'DevelopersRecipientProvider']]
       )
     }
   }
