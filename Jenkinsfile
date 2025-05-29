@@ -29,7 +29,9 @@ pipeline {
             script {
               try {
                 sh 'export JEST_JUNIT_OUTPUT=junit-chrome.xml && npm test -- --browser=chrome --watchAll=false --ci --reporters=jest-junit'
+                sh 'ls -l'
                 sh 'find . -name "junit*.xml"'
+                sh 'cat junit-chrome.xml || echo "No se generó junit-chrome.xml"'
                 junit 'junit-chrome.xml'
               } catch (err) {
                 echo "Pruebas en Chrome fallaron: ${err}"
@@ -44,7 +46,9 @@ pipeline {
             script {
               try {
                 sh 'export JEST_JUNIT_OUTPUT=junit-firefox.xml && npm test -- --browser=firefox --watchAll=false --ci --reporters=jest-junit'
+                sh 'ls -l'
                 sh 'find . -name "junit*.xml"'
+                sh 'cat junit-firefox.xml || echo "No se generó junit-firefox.xml"'
                 junit 'junit-firefox.xml'
               } catch (err) {
                 echo "Pruebas en Firefox fallaron: ${err}"
