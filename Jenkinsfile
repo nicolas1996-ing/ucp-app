@@ -64,13 +64,6 @@ pipeline {
         }
       }
     }
-
-    // Opcional: Listar archivos de reporte
-    stage('Listar Reportes') {
-      steps {
-        sh 'ls -l junit-*.xml'
-      }
-    }
   }
 
   post {
