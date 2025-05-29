@@ -40,7 +40,7 @@ pipeline {
         URL Build: ${env.BUILD_URL}
         Detalles de Pruebas: ${env.BUILD_URL}testReport/
         """,
-        to: 'jose.aristizabal@ucp.edu.co' // Reemplaza con tu email
+        to: 'josenicolasaristizabalramirez@gmail.com' // Reemplaza con tu email
       )
     }
   }
