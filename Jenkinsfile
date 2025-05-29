@@ -1,43 +1,96 @@
 pipeline {
   agent any
   tools {
-    nodejs 'Node_24' // Nombre definido en Global Tool Configuration
+    nodejs 'Node_24' // Configurado en Global Tools
   }
   stages {
-    // Etapa 1: Checkout del código desde GitHub
+    // Etapa 1: Checkout
     stage('Checkout') {
-      steps {
-        git branch: 'main', url: 'https://github.com/nicolas1996-ing/ucp-app.git'
-      }
+        steps {
+            git branch: 'main', url: 'https://github.com/nicolas1996-ing/ucp-app.git'
+        }
     }
-    // Etapa 2: Instalar dependencias y build del proyecto
+
+    // Etapa 2: Build
     stage('Build') {
-      steps {
-        sh 'npm install'
-        sh 'npm run build' // Ejecuta el build de React
+        steps {
+            sh 'npm install'
+            sh 'npm run build'
+        }
+    }
+
+    // Etapa 3: Pruebas Paralelizadas
+    stage('Pruebas en Paralelo') {
+      parallel {
+        // Pruebas en Chrome
+        stage('Pruebas Chrome') {
+          steps {
+            script {
+              try {
+                sh 'npm test -- --browser=chrome --watchAll=false --ci --reporters=jest-junit'
+                junit 'junit-chrome.xml'
+              } catch (err) {
+                echo "Pruebas en Chrome fallaron: ${err}"
+                currentBuild.result = 'UNSTABLE'
+              }
+            }
+          }
+        }
+        // Pruebas en Firefox
+        stage('Pruebas Firefox') {
+          steps {
+            script {
+              try {
+                sh 'npm test -- --browser=firefox --watchAll=false --ci --reporters=jest-junit'
+                junit 'junit-firefox.xml'
+              } catch (err) {
+                echo "Pruebas en Firefox fallaron: ${err}"
+                currentBuild.result = 'UNSTABLE'
+              }
+            }
+          }
+        }
       }
     }
-    // Etapa 3: Ejecutar pruebas unitarias
-    stage('Pruebas Unitarias') {
+
+    // Etapa 4: Deploy Simulado
+    stage('Deploy a Producción (Simulado)') {
       steps {
-        sh 'npm test -- --watchAll=false --ci --reporters=default --reporters=jest-junit' // Genera reporte JUnit
-      }
-      post {
-        always {
-          junit 'junit.xml' // Publica reporte en Jenkins
-          archiveArtifacts artifacts: 'junit.xml', allowEmptyArchive: true
+        script {
+          // Crear carpeta "prod" y copiar build
+          sh 'mkdir -p prod && cp -r build/* prod/'
+          echo "¡Deploy simulado exitoso! Archivos copiados a /prod"
         }
       }
     }
   }
-  // Post-actions (opcional)
+
   post {
     always {
-      mail(
+      // Publicar reportes HTML (opcional)
+      publishHTML target: [
+        allowMissing: true,
+        alwaysLinkToLastBuild: true,
+        keepAll: true,
+        reportDir: 'prod',
+        reportFiles: 'index.html',
+        reportName: 'Demo Deploy'
+      ]
+
+      // Notificación por email ante fallos
+      emailext (
+        subject: "Pipeline ${currentBuild.result}: ${env.JOB_NAME}",
+        body: """
+            <h2>Resultado: ${currentBuild.result}</h2>
+            <p><b>URL del Build:</b> <a href=\"${env.BUILD_URL}\">${env.BUILD_URL}</a></p>
+            <p><b>Consola:</b> <a href=\"${env.BUILD_URL}console\">Ver logs</a></p>
+        """,
         to: 'josenicolasaristizabalramirez@gmail.com',
-        subject: "Build Status: ${currentBuild.currentResult}",
-        body: "Job: ${env.JOB_NAME}\nEstado: ${currentBuild.currentResult}\nURL: ${env.BUILD_URL}"
+        mimeType: 'text/html'
       )
+
+      // Limpiar workspace
+      cleanWs()
     }
   }
 }
