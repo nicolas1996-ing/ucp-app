@@ -33,16 +33,10 @@ pipeline {
   // Post-actions (opcional)
   post {
     always {
-      emailext (
-        subject: "Pipeline ${currentBuild.result}: ucp-app-react #${env.BUILD_NUMBER}",
-        body: """
-        Estado: ${currentBuild.result}<br>
-        URL Build: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a><br>
-        Detalles de Pruebas: <a href="${env.BUILD_URL}testReport/">${env.BUILD_URL}testReport/</a>
-        """,
-        mimeType: 'text/html',
+      mail(
         to: 'josenicolasaristizabalramirez@gmail.com',
-        recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+        subject: "Build Status: ${currentBuild.currentResult}",
+        body: "Job: ${env.JOB_NAME}\nEstado: ${currentBuild.currentResult}\nURL: ${env.BUILD_URL}"
       )
     }
   }
