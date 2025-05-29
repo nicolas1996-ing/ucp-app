@@ -29,10 +29,11 @@ pipeline {
             script {
               try {
                 sh 'export JEST_JUNIT_OUTPUT=junit.xml && npm test -- --browser=chrome --watchAll=false --ci --reporters=jest-junit'
+                sh 'mv junit.xml junit-chrome.xml'
                 sh 'ls -l'
                 sh 'find . -name "junit*.xml"'
-                sh 'cat junit.xml || echo "No se generó junit.xml"'
-                junit 'junit.xml'
+                sh 'cat junit-chrome.xml || echo "No se generó junit-chrome.xml"'
+                junit 'junit-chrome.xml'
               } catch (err) {
                 echo "Pruebas en Chrome fallaron: ${err}"
                 currentBuild.result = 'UNSTABLE'
