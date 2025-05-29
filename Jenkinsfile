@@ -27,7 +27,7 @@ pipeline {
           steps {
             script {
               try {
-                sh 'npm test -- --browser=chrome --watchAll=false --ci --reporters=jest-junit'
+                sh 'JEST_JUNIT_OUTPUT=junit-chrome.xml npm test -- --browser=chrome --watchAll=false --ci --reporters=jest-junit'
                 junit 'junit-chrome.xml'
               } catch (err) {
                 echo "Pruebas en Chrome fallaron: ${err}"
@@ -41,7 +41,7 @@ pipeline {
           steps {
             script {
               try {
-                sh 'npm test -- --browser=firefox --watchAll=false --ci --reporters=jest-junit'
+                sh 'JEST_JUNIT_OUTPUT=junit-firefox.xml npm test -- --browser=firefox --watchAll=false --ci --reporters=jest-junit'
                 junit 'junit-firefox.xml'
               } catch (err) {
                 echo "Pruebas en Firefox fallaron: ${err}"
