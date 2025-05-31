@@ -91,6 +91,7 @@ pipeline {
         subject: "Build Status: ${currentBuild.currentResult}",
         body: "Job: ${env.JOB_NAME}\nEstado: ${currentBuild.currentResult}\nURL: ${env.BUILD_URL}"
       )
+
       // Limpiar workspace
       cleanWs()
     }
